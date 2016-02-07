@@ -155,9 +155,11 @@ function getAllCreatedRecipeByCook(req, res) {
 function __successCallback(res, result, err, collectionName) {	
 	if(err) {
 		__logger(err, collectionName);		
+		res.status(500).send({ message: err });
+	} else {
+		console.log("result set count:"+result.length);
+		res.json(result || []);	
 	}	
-	console.log("result set count:"+result.length);
-	res.json(result || []);
 }
 
 function __logger(err, collectionName) {

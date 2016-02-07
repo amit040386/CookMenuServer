@@ -2,4 +2,5 @@ var authController = require("../../app/controllers/authentication.server.contro
 
 module.exports = function(app) {
 	app.post('/auth/:providerName', authController.authorize);	
+	app.get('/logout/:userId', authController.userLogout);	
 };

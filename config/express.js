@@ -15,7 +15,6 @@ module.exports = function() {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "X-Requested-With");
         next();
-    
     });
 
     app.use(express.static('public'));
@@ -24,8 +23,8 @@ module.exports = function() {
     require('../app/routes/timing.server.routes.js')(app);
     require('../app/routes/recipe.server.routes.js')(app);
     require('../app/routes/origin.server.routes.js')(app);
-    require('../app/routes/saved.server.routes.js')(app);    
     require('../app/routes/authentication.server.routes.js')(app);
+    require('../app/routes/user.server.routes.js')(app);
     
     return app;
 };
