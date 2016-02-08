@@ -81,9 +81,10 @@ function __shareUserData(res, userObj) {
 					res.status(500).send({ message: err });
 				} else {
 					userObj.userID = userResult._id;
+					
+					if(result) {
+						var recipeId, savedRecipeLen = result.savedRecipes.length;
 
-					var recipeId, savedRecipeLen = result.savedRecipes.length;
-					if(savedRecipeLen > 0) {
 						for(var index=0; index<savedRecipeLen; index++){
 							recipeId = result.savedRecipes[index];
 
