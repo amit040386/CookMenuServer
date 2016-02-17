@@ -54,11 +54,11 @@ function __loginWithFacebook(req, res, providerName) {
 
 function __shareUserData(res, userObj) {
 	
-	db.userCollection.findOne({
+	db.userCollection.find({
 		socialID: userObj.socialID
 	}, function(err, result) {
 		if(err) {
-			console.log("error in saving new user record");
+			console.log("error in finding new user record");
 			res.status(500).send({ message: err });
 		} else {
 			var updateData = {		
@@ -71,64 +71,57 @@ function __shareUserData(res, userObj) {
 				birthday: userObj.birthday		
 			};
 
-			if(result && result.length > 0) {
-				updateData._id = mongojs.ObjectId(result._id);					
-			}
+			
+			if(result && result.length > 0) {								
+				var recipeId, savedRecipeLen = (result.savedRecipes) ? result.savedRecipes.length : 0;
 
-			db.userCollection.save(updateData, function(err, userResult) {
-				if(err) {
-					console.log("error in saving new user record");
-					res.status(500).send({ message: err });
-				} else {
-					userObj.userID = userResult._id;
-					
-					if(result) {
-						var recipeId, savedRecipeLen = result.savedRecipes.length;
+				userObj.userID = result._id;
+				
+				if(savedRecipeLen > 0) {
+					for(var index=0; index<savedRecipeLen; index++){
+						recipeId = result.savedRecipes[index];
 
-						for(var index=0; index<savedRecipeLen; index++){
-							recipeId = result.savedRecipes[index];
+						(function(id, len, counter){
+							db.recipeCollection.findOne({
+								_id: mongojs.ObjectId(id)
+							}, function(err, recipeResult){								
+								if(err) {
+									console.log("error in fetching full receipe of saved list");
+									res.status(500).send({ message: err });
+								} else {				
+									userObj["savedRecipes"]["savedItems_"+recipeResult._id] = recipeResult;								
 
-							(function(id, len, counter){
-								db.recipeCollection.findOne({
-									_id: mongojs.ObjectId(id)
-								}, function(err, recipeResult){								
-									if(err) {
-										console.log("error in fetching full receipe of saved list");
-										res.status(500).send({ message: err });
-									} else {				
-										userObj["savedRecipes"]["savedItems_"+recipeResult._id] = recipeResult;								
-
-										if(counter === len-1) {
-											console.log("saved recipe are fetched successfully");
-											res.json(userObj);	
-										}
+									if(counter === len-1) {
+										console.log("saved recipe are fetched successfully");
+										res.json(userObj);	
 									}
-								});
-							})(recipeId, savedRecipeLen, index);						
-							
-						}
+								}
+							});
+						})(recipeId, savedRecipeLen, index);						
+						
+					}
+				} else {
+					res.json(userObj);
+				}						
+			} else {
+				db.userCollection.insert(updateData, function(err, userResult) {
+					if(err) {
+						console.log("error in saving new user record");
+						res.status(500).send({ message: err });
 					} else {
-						res.json(userObj);	
-					}					
-				}
-			});
+						userObj.userID = userResult._id;
+						res.json(userObj);										
+					}
+				});
+			}
+			
 		}
 	});
 }
 
 function userLogout(req, res) {
 	var userId = req.params.userId;
-
-	db.userCollection.remove({
-		_id: mongojs.ObjectId(userId)
-	}, function(err, result) {
-		if(err) {
-			console.log("error in logging out user");
-			res.status(500).send({ message: err });
-		} else {
-			res.json(true);	
-		}
-	});
+	res.json(true);	
 }
 
 module.exports = {
