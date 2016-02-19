@@ -11,4 +11,5 @@ module.exports = function(app) {
 	app.get('/getAllRecipeBy/random/:categoryCount/:recipeCount', recipeController.getAllRandomRecipe);	
 
 	app.get('/getAllCreatedRecipeBy/cook/:cookId', recipeController.getAllCreatedRecipeByCook);
+	app.post('/setFavoriteRecipeInBulk/:userId', recipeController.setFavoriteRecipeInBulk);
 };

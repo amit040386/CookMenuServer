@@ -1,5 +1,6 @@
 var db = require('../../config/mongojs').db;
 var _ = require("underscore");
+var mongojs = require('mongojs');
 
 function getAllRecipeList(req, res) {
 	db.recipeCollection.find(function(err, result) {
@@ -152,6 +153,32 @@ function getAllCreatedRecipeByCook(req, res) {
 	}
 }
 
+function setFavoriteRecipeInBulk (req, res) {
+	var userId = req.params.userId, data = req.body.data;
+
+	if(userId && data) {
+		db.userCollection.findAndModify({
+			query:{
+				_id: mongojs.ObjectId(userId)
+			},
+			update: {
+				$addToSet: {
+					savedRecipes: {
+						 $each: data
+					}
+				}
+			}
+		}, function(err, result){
+			if(err) {
+				__logger(err, "userCollection for adding favorite recipes");
+				res.status(500).send({ message: err });
+			} else {
+				res.json(true);
+			}
+		});
+	}
+}
+
 function __successCallback(res, result, err, collectionName) {	
 	if(err) {
 		__logger(err, collectionName);		
@@ -179,5 +206,6 @@ module.exports = {
 	getAllSpecialRecipeList: getAllSpecialRecipeList,
 	getAllRecipeByName: getAllRecipeByName,
 	getAllRandomRecipe: getAllRandomRecipe,
-	getAllCreatedRecipeByCook: getAllCreatedRecipeByCook
+	getAllCreatedRecipeByCook: getAllCreatedRecipeByCook,
+	setFavoriteRecipeInBulk: setFavoriteRecipeInBulk
 };

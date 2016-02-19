@@ -72,7 +72,9 @@ function __shareUserData(res, userObj) {
 			};
 
 			
-			if(result && result.length > 0) {								
+			if(result && result.length > 0) {
+				result = result[0];								
+				
 				var recipeId, savedRecipeLen = (result.savedRecipes) ? result.savedRecipes.length : 0;
 
 				userObj.userID = result._id;
@@ -100,7 +102,7 @@ function __shareUserData(res, userObj) {
 						})(recipeId, savedRecipeLen, index);						
 						
 					}
-				} else {
+				} else {					
 					res.json(userObj);
 				}						
 			} else {
