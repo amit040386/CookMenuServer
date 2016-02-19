@@ -12,4 +12,5 @@ module.exports = function(app) {
 
 	app.get('/getAllCreatedRecipeBy/cook/:cookId', recipeController.getAllCreatedRecipeByCook);
 	app.post('/setFavoriteRecipeInBulk/:userId', recipeController.setFavoriteRecipeInBulk);
+	app.get('/recommendRecipe/:recipeId', recipeController.recommendRecipe);
 };

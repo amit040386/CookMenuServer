@@ -179,6 +179,30 @@ function setFavoriteRecipeInBulk (req, res) {
 	}
 }
 
+function recommendRecipe(req, res) {
+	var recipeId = req.params.recipeId;
+
+	if(recipeId) {
+		db.recipeCollection.findAndModify({
+			query:{
+				_id: mongojs.ObjectId(recipeId)
+			},
+			update: {
+				$inc: {
+					recommended: 1
+				}
+			}
+		}, function(err, result){
+			if(err) {
+				__logger(err, "userCollection for recommending recipe");
+				res.status(500).send({ message: err });
+			} else {
+				res.json(true);
+			}
+		});
+	}
+}
+
 function __successCallback(res, result, err, collectionName) {	
 	if(err) {
 		__logger(err, collectionName);		
@@ -207,5 +231,6 @@ module.exports = {
 	getAllRecipeByName: getAllRecipeByName,
 	getAllRandomRecipe: getAllRandomRecipe,
 	getAllCreatedRecipeByCook: getAllCreatedRecipeByCook,
-	setFavoriteRecipeInBulk: setFavoriteRecipeInBulk
+	setFavoriteRecipeInBulk: setFavoriteRecipeInBulk,
+	recommendRecipe: recommendRecipe
 };
