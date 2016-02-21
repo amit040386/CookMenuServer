@@ -203,6 +203,36 @@ function recommendRecipe(req, res) {
 	}
 }
 
+function submitComment(req, res) {
+	var cookId = req.body.userID, name = req.body.name, recipeId = req.body.recipeID, comment = req.body.comment;
+
+	if(cookId && name && recipeId && comment) {
+		db.recipeCollection.findAndModify({
+			query:{
+				_id: mongojs.ObjectId(recipeId)
+			},
+			update: {
+				$addToSet: {
+					comments: {
+						"cook": {
+							"id": cookId,
+							"name": name
+						},						
+						"comment": [comment]
+					}
+				}
+			}
+		}, function(err, result){
+			if(err) {
+				__logger(err, "recipeCollection for sbmitting comment");
+				res.status(500).send({ message: err });
+			} else {
+				res.json(true);
+			}
+		});
+	}
+}
+
 function __successCallback(res, result, err, collectionName) {	
 	if(err) {
 		__logger(err, collectionName);		
@@ -232,5 +262,6 @@ module.exports = {
 	getAllRandomRecipe: getAllRandomRecipe,
 	getAllCreatedRecipeByCook: getAllCreatedRecipeByCook,
 	setFavoriteRecipeInBulk: setFavoriteRecipeInBulk,
-	recommendRecipe: recommendRecipe
+	recommendRecipe: recommendRecipe,
+	submitComment: submitComment
 };
