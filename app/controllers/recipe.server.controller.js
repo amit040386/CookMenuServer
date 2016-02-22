@@ -236,7 +236,7 @@ function submitComment(req, res) {
 
 function deleteComment(req, res) {
 	var recipeId = req.body.recipeId, time = +req.body.time;	
-	console.log("time:"+time);
+	
 	if(recipeId && time) {
 		db.recipeCollection.findAndModify({
 			query:{
@@ -254,7 +254,6 @@ function deleteComment(req, res) {
 				__logger(err, "recipeCollection for deleting comment");
 				res.status(500).send({ message: err });
 			} else {
-				console.log("delete:"+JSON.stringify(result));
 				res.json(true);
 			}
 		});
