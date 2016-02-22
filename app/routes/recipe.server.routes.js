@@ -14,4 +14,5 @@ module.exports = function(app) {
 	app.post('/setFavoriteRecipeInBulk/:userId', recipeController.setFavoriteRecipeInBulk);
 	app.get('/recommendRecipe/:recipeId', recipeController.recommendRecipe);
 	app.post('/submitComment', recipeController.submitComment);
+	app.post('/deleteComment', recipeController.deleteComment);
 };

@@ -216,8 +216,9 @@ function submitComment(req, res) {
 					comments: {
 						"cook": {
 							"id": cookId,
-							"name": name
-						},						
+							"name": name							
+						},				
+						"time": new Date().getTime(),		
 						"comment": [comment]
 					}
 				}
@@ -227,6 +228,33 @@ function submitComment(req, res) {
 				__logger(err, "recipeCollection for sbmitting comment");
 				res.status(500).send({ message: err });
 			} else {
+				res.json(true);
+			}
+		});
+	}
+}
+
+function deleteComment(req, res) {
+	var recipeId = req.body.recipeId, time = +req.body.time;	
+	console.log("time:"+time);
+	if(recipeId && time) {
+		db.recipeCollection.findAndModify({
+			query:{
+				_id: mongojs.ObjectId(recipeId)
+			},
+			update: {
+				$pull: {
+					comments: {						
+						time: time						
+					}
+				}
+			}
+		}, function(err, result){
+			if(err) {
+				__logger(err, "recipeCollection for deleting comment");
+				res.status(500).send({ message: err });
+			} else {
+				console.log("delete:"+JSON.stringify(result));
 				res.json(true);
 			}
 		});
@@ -263,5 +291,6 @@ module.exports = {
 	getAllCreatedRecipeByCook: getAllCreatedRecipeByCook,
 	setFavoriteRecipeInBulk: setFavoriteRecipeInBulk,
 	recommendRecipe: recommendRecipe,
-	submitComment: submitComment
+	submitComment: submitComment,
+	deleteComment: deleteComment
 };
