@@ -17,7 +17,8 @@ module.exports = function() {
         next();
     });
 
-    app.use(express.static('public'));
+    app.use(express.static('public'));    
+    app.set('view engine', 'jade');
     
     require('../app/routes/category.server.routes.js')(app);
     require('../app/routes/timing.server.routes.js')(app);

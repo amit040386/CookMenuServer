@@ -1,6 +1,8 @@
 var db = require('../../config/mongojs').db;
 var _ = require("underscore");
 var mongojs = require('mongojs');
+var jade = require('jade');
+var config = require('../../config/config');
 
 function getAllRecipeList(req, res) {
 	db.recipeCollection.find(function(err, result) {
@@ -260,6 +262,25 @@ function deleteComment(req, res) {
 	}
 }
 
+function shareRecipeInSocialMedia(req, res) {
+	var recipeId = req.params.recipeId;
+
+	if(recipeId) {
+		db.recipeCollection.findOne({
+			_id: mongojs.ObjectId(recipeId)
+		}, function(err, result){
+			if(err) {
+				__logger(err, "recipeCollection for fetching recipe html for social media sharing");
+				res.status(500).send({ message: err });
+			} else {
+				result.appLink = config.appLink;
+				result.media = config.imagePath+result.media;
+				res.render('recipe', result);
+			}
+		});		
+	}
+}
+
 function __successCallback(res, result, err, collectionName) {	
 	if(err) {
 		__logger(err, collectionName);		
@@ -291,5 +312,6 @@ module.exports = {
 	setFavoriteRecipeInBulk: setFavoriteRecipeInBulk,
 	recommendRecipe: recommendRecipe,
 	submitComment: submitComment,
-	deleteComment: deleteComment
+	deleteComment: deleteComment,
+	shareRecipeInSocialMedia: shareRecipeInSocialMedia
 };

@@ -15,4 +15,5 @@ module.exports = function(app) {
 	app.get('/recommendRecipe/:recipeId', recipeController.recommendRecipe);
 	app.post('/submitComment', recipeController.submitComment);
 	app.post('/deleteComment', recipeController.deleteComment);
+	app.get('/shareRecipeInSocialMedia/:recipeId', recipeController.shareRecipeInSocialMedia);
 };
