@@ -281,6 +281,41 @@ function shareRecipeInSocialMedia(req, res) {
 	}
 }
 
+function submitRecipe(req, res) {
+	var data = req.body;
+
+	if(data && data.name && data.shortNote && data.origin.length > 0 && data.timing.length > 0 && data.category.length > 0 && data.ingredients.length > 0 && data.fullDescription.length > 0 && data.cook && data.cook.id && data.cook.name) {
+		
+		db.recipeCollection.insert({
+			"title": data.title,
+			"media": (data.media) ? data.media : config.defaultImage,
+			"description": data.shortNote,
+			"recipe": {
+				"ingradient": data.ingredients,
+				"full_description": data.fullDescription.join("\n\n")
+			},
+			"origin": data.origin[0],
+			"category": data.category,
+			"time": data.timing[0],
+			"isSpecial": false,
+			"cook": {
+				"id": data.cook.id,
+				"name": data.cook.name,
+				"city": ""
+			},
+			"recommended": 0,
+			"comments": []
+		}, function(err, result){
+			if(err) {
+				__logger(err, "recipeCollection for submitting new recipe");
+				res.status(500).send({ message: err });
+			} else {
+				res.json(result);
+			}
+		});
+	}
+}
+
 function __successCallback(res, result, err, collectionName) {	
 	if(err) {
 		__logger(err, collectionName);		
@@ -313,5 +348,6 @@ module.exports = {
 	recommendRecipe: recommendRecipe,
 	submitComment: submitComment,
 	deleteComment: deleteComment,
-	shareRecipeInSocialMedia: shareRecipeInSocialMedia
+	shareRecipeInSocialMedia: shareRecipeInSocialMedia,
+	submitRecipe: submitRecipe
 };
