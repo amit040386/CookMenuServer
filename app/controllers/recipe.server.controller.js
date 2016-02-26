@@ -141,12 +141,10 @@ function getAllRandomRecipe(req, res) {
 
 function getAllCreatedRecipeByCook(req, res) {
 	var cookId = req.params.cookId;
-
+console.log("cook id"+cookId);
 	if(cookId) {
 		db.recipeCollection.find({
-			cook: {
-				id: cookId
-			}
+			"cook.id": cookId			
 		}, function(err, result) {
 			__successCallback(res, result, err, 'recipeCollection by creater');
 		});
@@ -287,7 +285,7 @@ function submitRecipe(req, res) {
 	if(data && data.name && data.shortNote && data.origin.length > 0 && data.timing.length > 0 && data.category.length > 0 && data.ingredients.length > 0 && data.fullDescription.length > 0 && data.cook && data.cook.id && data.cook.name) {
 		
 		db.recipeCollection.insert({
-			"title": data.title,
+			"title": data.name,
 			"media": (data.media) ? data.media : config.defaultImage,
 			"description": data.shortNote,
 			"recipe": {
