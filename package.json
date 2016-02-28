@@ -7,18 +7,18 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "~4.13.x",
-    "body-parser": "~1.14.x",
-    "cors": "~2.7.x",
-    "jade": "~1.11.x",
-    "mongojs": "~2.3.x",
-    "node-defer": "~1.0.x",
-    "querystring": "~0.2.x",
-    "request": "~2.69.x",
-    "underscore": "~1.8.x"
+    "express": "4.13.4",
+    "body-parser": "1.14.2",
+    "cors": "2.7.1",
+    "jade": "1.11.0",
+    "mongojs": "2.3.0",
+    "node-defer": "1.0.1",
+    "querystring": "0.2.0",
+    "request": "2.69.0",
+    "underscore": "1.8.3"
   },
   "engines": {
-    "node": "4.1.x"
+    "node": "4.1.2"
   },
   "repository": {
     "type": "git",
