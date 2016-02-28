@@ -20,9 +20,9 @@ module.exports = function() {
     app.use(express.static('public'));    
     app.set('view engine', 'jade');
 
-    /*app.get('/', function(request, response) {
+    app.get('/', function(request, response) {
         response.send('Hello CookMenuServer!');
-    });*/
+    });
     
     require('../app/routes/category.server.routes.js')(app);
     require('../app/routes/timing.server.routes.js')(app);
