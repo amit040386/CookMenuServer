@@ -1,0 +1,7 @@
+{
+  "name": "CookMenuServer",
+  "description": "CookMenuServer Node.js app using Express 4",
+  "repository": "https://github.com/amit040386/CookMenuServer",
+  "logo": "http://CookMenuServer.herokuapp.com/node.svg",
+  "keywords": ["node","heroku","express","mongodb"]
+}
