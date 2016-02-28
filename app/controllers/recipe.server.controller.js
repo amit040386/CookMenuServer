@@ -280,11 +280,11 @@ function shareRecipeInSocialMedia(req, res) {
 }
 
 function submitRecipe(req, res) {
-	var data = req.body;
+	var data = req.body, recipeId = req.params.recipeId;
 
 	if(data && data.name && data.shortNote && data.origin.length > 0 && data.timing.length > 0 && data.category.length > 0 && data.ingredients.length > 0 && data.fullDescription.length > 0 && data.cook && data.cook.id && data.cook.name) {
 		
-		db.recipeCollection.insert({
+		var updatedDataObj = {
 			"title": data.name,
 			"media": (data.media) ? data.media : config.defaultImage,
 			"description": data.shortNote,
@@ -303,12 +303,46 @@ function submitRecipe(req, res) {
 			},
 			"recommended": 0,
 			"comments": []
+		};
+
+		if(recipeId) {
+			db.recipeCollection.update({
+				_id: mongojs.ObjectId(recipeId)
+			},{
+				$set: updatedDataObj
+			}, function(err, result){
+				if(err) {
+					__logger(err, "recipeCollection for updating existing recipe");
+					res.status(500).send({ message: err });
+				} else {
+					res.json(result);
+				}
+			});
+		} else {
+			db.recipeCollection.insert(updatedDataObj, function(err, result){
+				if(err) {
+					__logger(err, "recipeCollection for submitting new recipe");
+					res.status(500).send({ message: err });
+				} else {
+					res.json(result);
+				}
+			});
+		}		
+	}
+}
+
+function deleteRecipe(req, res) {
+	var recipeId = req.body.recipeId;
+
+	if(recipeId) {
+		db.recipeCollection.remove({
+			"_id": mongojs.ObjectId(recipeId)
 		}, function(err, result){
 			if(err) {
-				__logger(err, "recipeCollection for submitting new recipe");
+				__logger(err, "recipeCollection for deleting recipe");
 				res.status(500).send({ message: err });
 			} else {
-				res.json(result);
+				res.json(true);
 			}
 		});
 	}
@@ -347,5 +381,6 @@ module.exports = {
 	submitComment: submitComment,
 	deleteComment: deleteComment,
 	shareRecipeInSocialMedia: shareRecipeInSocialMedia,
-	submitRecipe: submitRecipe
+	submitRecipe: submitRecipe,
+	deleteRecipe: deleteRecipe
 };
