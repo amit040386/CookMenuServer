@@ -6,7 +6,7 @@ module.exports = {
     defaultImage: "Fish-curry.jpg",
     appLink: "https://play.google.com/store/apps?hl=en",
     db: {
-    	name: "cookMenuDB",    	
+    	name: "cookMenuDB",    	    	
     	collections: ['menuCollection','categoryCollection','timingCollection','recipeCollection','originCollection','userCollection']
     }
 };
