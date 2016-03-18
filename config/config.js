@@ -7,6 +7,6 @@ module.exports = {
     appLink: "https://play.google.com/store/apps?hl=en",
     db: {
     	name: "cookMenuDB",    	    	
-    	collections: ['menuCollection','categoryCollection','timingCollection','recipeCollection','originCollection','userCollection']
+    	collections: ['categoryCollection','timingCollection','recipeCollection','originCollection','userCollection']
     }
 };
